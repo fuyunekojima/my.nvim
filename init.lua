@@ -42,6 +42,9 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.opt.termguicolors = true
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -63,6 +66,8 @@ vim.opt.rtp:prepend(lazypath)
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
+
+-- vim.cmd([[autocmd VimEnter * NvimTreeToggle]])
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -365,6 +370,15 @@ local on_attach = function(_, bufnr)
   --
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
+
+  -- nvim-tree keymaps
+  vim.keymap.set('n', '<C-b>', require('nvim-tree').toggle, {noremap=true})
+
+  -- bufferline keymaps
+  vim.api.nvim_set_keymap('n', '<C-]>', ":BufferLineCycleNext<CR>", {noremap=true})
+  vim.api.nvim_set_keymap('n', '<C-[>', ":BufferLineCyclePrev<CR>", {noremap=true})
+  vim.api.nvim_set_keymap('n', '<leader>q', ":BufferLinePickClose<CR>", {noremap=true})
+
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -492,6 +506,5 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
